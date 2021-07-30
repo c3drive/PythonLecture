@@ -1,0 +1,62 @@
+# DB作成
+$ sqlite3 mydb.db
+
+＃ create table
+CREATE TABLE User(UserId INTEGER PRIMARY KEY NOT NULL, Name TEXT DEFAULT 'anonymous', Email TEXT NOT NULL, Age INTEGER CHECK(Age > 0));
+
+# insert
+INSERT INTO User (UserId, Name, Email, Age) VALUES(1, 'John', 'john@gmail.com', 30);
+INSERT INTO User (UserId, Email, Age) VALUES(2, 'jiro@gmail.com', 30);
+INSERT INTO User VALUES(3, 'Taro' 'taro@gmail.com', 10);
+
+# select 時のヘッダー表示
+.headers on
+
+# select
+SELECT * FROM User;
+SELECT UserId, Name, Email, Age FROM User;
+SELECT COUNT(*) FROM Customer;
+SELECT COUNT(*) FROM Customer c LEFT JOIN Employee e ON c.SupportRepId = e.EmployeeId;
+SELECT COUNT(*) FROM Employee e LEFT JOIN Customer c ON c.SupportRepId = e.EmployeeId;
+
+# update
+UPDATE User SET Email='sample@gmail.com' WHERE Name='anonymous'
+
+# delete
+SELECT UserId, Name, Email, Age FROM User;
+
+# .dump
+.dump
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE User(UserId INTEGER PRIMARY KEY NOT NULL, Name TEXT DEFAULT `anonymous`, Email TEXT NOT NULL, Age INTEGER CHECK(Age > 0));
+INSERT INTO User VALUES(2,'anonymous','sample@gmail.com',30);
+INSERT INTO User VALUES(3,'Taro','taro@gmail.com',10);
+COMMIT;
+
+# Chinook
+https://raw.githubusercontent.com/lerocha/chinook-database/master/ChinookDatabase/DataSources/Chinook_Sqlite.sql
+
+# order by
+SELECT * FROM Employee ORDER BY LastName;
+SELECT * FROM Employee ORDER BY LastName DESC;
+
+# like(%は0文字以上)
+SELECT * FROM Employee WHERE Title LIKE "%it%";
+
+# join
+# left join: 左側だけ結合後に残る。右側は左側と一致しているところ以外は残らない
+SELECT c.FirstName AS CustmerName, e.FirstName AS SupportRepName, e.Title AS SupportRepTitle FROM Customer c LEFT JOIN Employee e ON c.SupportRepId = e.EmployeeId;
+SELECT c.FirstName AS CustmerName, e.FirstName AS SupportRepName, e.Title AS SupportRepTitle FROM Employee e LEFT JOIN Customer c ON c.SupportRepId = e.EmployeeId;
+
+# right join: 右側だけ結合後に残る。
+# inner join: 左右が一致している行だけ結合後に残る
+SELECT Album.Title, Artist.Name FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId LIMIT 10;
+SELECT l.Title, r.Name FROM Album l INNER JOIN Artist r ON l.ArtistId = r.ArtistId LIMIT 10;
+SELECT g.Name AS GenreName, t.Name AS TrackName FROM Track t INNER JOIN Genre g ON g.GenreId = t.GenreId LIMIT 10;
+
+# full outer join: 全ての行が結合後に残るSQLite3ではサポートしていない）
+
+# view
+CREATE VIEW ITEmployee AS SELECT * FROM Employee WHERE Title LIKE "%IT%";
+DROP VIEW ITEmployee;

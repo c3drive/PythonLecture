@@ -1,0 +1,2 @@
+mode=w+ appends text
+mode=a+ appends text
